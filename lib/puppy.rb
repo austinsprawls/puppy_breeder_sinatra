@@ -2,13 +2,12 @@ module PuppyMill
 
   class Puppy
     attr_reader :breed, :name, :age, :id
-    @@id = 0
 
     def initialize(args)
       @breed = args[:breed]
       @name = args[:name]
       @age = args[:age]
-      @id = @@id += 1
+      @id = args[:id]
     end
 
   end
@@ -21,6 +20,7 @@ module PuppyMill
       @pups_array << puppy
       klass.modify_hold_orders(puppy)
       @all_pups.has_key?(puppy.breed) ? (@all_pups[puppy.breed][:list] << puppy) : (@all_pups[puppy.breed] = {price: :unknown, list: [puppy]})
+      PuppyMill.dbi.modify_hold_orders(puppy.breed)
     end
 
     # def asdf
@@ -42,13 +42,13 @@ module PuppyMill
 
   class PurchaseOrder
     attr_reader :customer_name, :breed, :id
-    @@id = 0
 
     def initialize(args)
-      @customer_name = args[:customer_name]
+      # @customer_name = args[:customer_name]
       @breed = args[:breed]
-      @status = :pending
-      @id = @@id+=1
+      @status = args[:status]
+      # @status = Puppies.breed_available?(@breed) ? 'pending' : 'hold'
+      @id = args[:id]
     end
 
     def status
@@ -60,40 +60,40 @@ module PuppyMill
     end
 
     def pend!
-      @status = :pending
+      @status = 'pending'
     end
 
     def pending?
-      @status == :pending
+      @status == 'pending'
     end
 
     def hold!
-      @status = :hold
+      @status = 'hold'
     end
 
     def hold?
-      @status == :hold
+      @status == 'hold'
     end
 
     def accepted?
-      @status == :accepted
+      @status == 'accepted'
     end
 
     def accept!
-      @status = :accepted
+      @status = 'accepted'
     end
 
     def denied?
-      @status == :denied
+      @status == 'denied'
     end
 
     def deny!
-      @status = :denied
+      @status = 'denied'
     end
 
-    def review
-      "customer: #{customer_name}, puppy breed: #{breed}"
-    end
+    # def review
+    #   "customer: #{customer_name}, puppy breed: #{breed}"
+    # end
   end
 
   class PurchaseOrders
@@ -104,7 +104,7 @@ module PuppyMill
     end
 
     def self.add_order(order)
-      order.status = :hold unless fulfill_order?(order)
+      order.status = 'hold' unless fulfill_order?(order)
       @orders << order
     end
 

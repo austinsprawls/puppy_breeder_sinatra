@@ -20,25 +20,29 @@
   <div class="container">
     <form method="post" action="/purchase_orders">
       <h2>Add a PO:</h2>
-      <label for="breed">Customer Name:</label>
-      <input type="text" name="customer_name">
-      <label for="name">Breed</label>
+      <label for="breed">Breed</label>
       <input type="text" name="breed">
       <input type="submit" value="Submit" class="btn btn-success">
     </form>
+
+    <% if @status == 'hold' %>
+      <h3>That breed is not available right now. You are put on hold.</h3>
+    <% end %>
 
     <% if @all_pending %>
       <h1>All Pending Orders</h1>
       <table class="table table-striped">
         <tr>
-          <td><strong>Customer Name</strong></td>
+          <!-- <td><strong>Customer Name</strong></td> -->
+          <td><strong>ID</strong></td>
           <td><strong>Breed Requested</strong></td>
           <td><strong>Current Status</strong></td>
           <td><strong>Actions</strong></td>
         </tr>
         <% @all_pending.each do |po| %>
           <tr>
-            <td><%= po.customer_name %></td>
+            <!-- <td><%= po.customer_name %></td> -->
+            <td><%= po.id %></td>
             <td><%= po.breed %></td>
             <td><%= po.status %></td>
             <td><button type="button" class="btn btn-warning"><a href="/purchase_orders/<%= po.id %>">Modify Status</a></button></td>
@@ -51,13 +55,15 @@
       <h1>All Accepted Orders</h1>
       <table class="table table-striped">
         <tr>
-          <td><strong>Customer Name</strong></td>
+          <td><strong>ID</strong></td>
           <td><strong>Breed Requested</strong></td>
+          <td><strong>Final Status</strong></td>
         </tr>
         <% @accepted_orders.each do |po| %>
           <tr>
-            <td><%= po.customer_name %></td>
+            <td><%= po.id %></td>
             <td><%= po.breed %></td>
+            <td><%= po.status %></td>
           </tr>
         <% end %>
       </table>

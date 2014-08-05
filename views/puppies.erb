@@ -18,6 +18,25 @@
 </head>
 <body>
   <div class="container">
+    <form class="form-inline" method="post" action="/breeds" role="form">
+      <h2>Create a new breed:</h2>
+      <div class="form-group">
+        <label for="breed">Breed:</label>
+        <div class="input-group">
+          <input type="text" name="breed"/>
+        </div>
+        <label for="price">Price:</label>
+        <div class="input-group">
+          <input type="text" name="price"/>
+        </div>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-success"/>
+    </form>
+
+    <% if @price%>
+      <h3>Breed created successfully!</h3>
+    <% end %>
+
     <form class="form-inline" method="post" action="/puppies" role="form">
       <h2>Add a pup:</h2>
       <div class="form-group">
@@ -44,22 +63,23 @@
         <h2>All your available puppies:</h2>
         <table class="table table-striped">
           <tr>
+            <td>ID</td>
             <td><strong>Breed</strong></td>
+            <td><strong>Name</strong></td>
+            <td><strong>Age</strong></td>
             <td><strong>Price</strong></td>
-            <td><strong>List</strong></td>
           </tr>
-          <% @all_pups.each do |breed, value| %>
-          <tr>
-            <td><%= breed %></td>
-            <td><%= value[:price] %></td>
-            <td><% value[:list].each do |pup| %>
-              <a href="/puppies/<%= pup.id %>"><%= pup.name %></a>,
-            <% end %> </td>
-          </tr>
+          <% @all_pups.each do |pup| %>
+            <tr>
+              <td><%= pup.id %></td>
+              <td><%= pup.breed %></td>
+              <td><a href='/puppies/<%= pup.id %>'><%= pup.name %></a></td>
+              <td><%= pup.age %> days</td>
+              <td><%= PuppyMill.dbi.get_breed_price(pup.breed) %></td>
+            </tr>
           <% end %>
-      <% end %>
-
         </table>
+      <% end %>
   </div>
 </body>
 </html>
