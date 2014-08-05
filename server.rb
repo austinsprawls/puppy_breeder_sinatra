@@ -49,9 +49,9 @@ post '/breeds' do
   erb :puppies
 end
 
-get '/create_purchase_order' do
-  erb :purchase_orders
-end
+# get '/create_purchase_order' do
+#   erb :purchase_orders
+# end
 
 get '/purchase_orders' do
   # @all_pending = PuppyMill::PurchaseOrders.view_all_pending_orders
